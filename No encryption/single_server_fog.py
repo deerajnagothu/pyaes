@@ -1,10 +1,14 @@
 import socket                   # Import socket module
+import os
+import time
 
+start_time = time.time()
 port = 60000                    # Reserve a port for your service.
 s = socket.socket()             # Create a socket object
 host = socket.gethostname()     # Get local machine name
 s.bind((host, port))            # Bind to the port
 s.listen(5)                     # Now wait for client connection.
+
 
 print 'Server listening....'
 
@@ -17,7 +21,7 @@ while True:
         dic = {'key':"1234567891234567"}
         conn.send(dic['key'])
 
-        with open('Receive/server_receive_text.txt', 'wb') as f:
+        with open('server_receive_text.txt', 'wb') as f:
             print "Server is ready to receive !"
 
             while True:

@@ -9,7 +9,7 @@ s.listen(5)                     # Now wait for client connection.
 iv = "InitializationVe"
 print 'Server listening....'
 key = "1234567891234567"
-
+aes = pyaes.AESModeOfOperationCBC(key, iv = iv)
 while True:
     conn, addr = s.accept()     # Establish connection with client.
     print 'Got connection from', addr
@@ -19,36 +19,22 @@ while True:
         dic = {'key':"1234567891234567"}
         conn.send(dic['key'])
 
-        with open('server_receive_text.txt', 'wb') as f:
+        with open('server_13.0.1.txt', 'wb') as f:
             print "Server is ready to receive !"
 
             while True:
                 data = conn.recv(16)
+                print(data)
 
 
                 # print('data=', data)
                 if not data:
                     break
-                f.write(data)
+                txt = aes.decrypt(data)
+                f.write(txt)
 
     f.close()
 
-    c = open('server_receive_text.txt','rb')
-    ciphertext = c.read()
-
-    print(ciphertext)
-
-    decrypter = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(key, iv))
-    decrypted = decrypter.feed(ciphertext[:len(ciphertext) / 2])
-    decrypted += decrypter.feed(ciphertext[len(ciphertext) / 2:])
-    decrypted += decrypter.feed()
-
-
-
-    d = open("final_output.txt",'w')
-    for line in decrypted:
-        d.write(line)
-    d.close()
 
     print("Successfully got the file !")
     conn.close()
